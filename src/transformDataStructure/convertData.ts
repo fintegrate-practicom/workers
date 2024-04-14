@@ -7,7 +7,6 @@ type DataType = {
   data: JSON
   }
 
-
 @Injectable()
 export class TransformDataStructure implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler):Observable<DataType> {
