@@ -1,8 +1,6 @@
-import { Test } from '@nestjs/testing';
-import { WorkersController } from '../controllers/workers.controller';
-import { WorkersService } from '../services/workers.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { WorkersController } from './workers.controller';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
-import { Employee } from '../../schemas/employee.entity';
 import { Request, Response } from 'express';
 import { ContextType, ExecutionContext, Type } from '@nestjs/common';
 import { of } from 'rxjs';
