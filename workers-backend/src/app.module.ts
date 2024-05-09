@@ -8,6 +8,8 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 // import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
+import { MessegeFromManegerToWorkerService } from './messege-from-maneger-to-worker/messege-from-maneger-to-worker.service';
+import { MessegeFromManegerToWorkerService } from './messege-from-maneger-to-worker/messege-from-maneger-to-worker.service';
 
 @Module({
   imports: [
@@ -26,6 +28,6 @@ import { Employee } from './schemas/employee.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService,RabbitPublisherService, TransformDataStructure],
+  providers: [AppService,RabbitPublisherService, TransformDataStructure, MessegeFromManegerToWorkerService],
 })
 export class AppModule {}
