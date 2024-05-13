@@ -8,6 +8,7 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 // import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
+import { businessModule } from './worker/businessapirequest/moudle/business.moudle';
 
 @Module({
   imports: [
@@ -15,7 +16,9 @@ import { Employee } from './schemas/employee.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    WorkersModule,
+    //
+    // WorkersModule,
+    businessModule,
     // AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -26,6 +29,6 @@ import { Employee } from './schemas/employee.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService,RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
-export class AppModule {}
+export class AppModule { }
