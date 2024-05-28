@@ -11,7 +11,7 @@ import {
 import { Project, ProjectSchema } from 'src/schemas/project.entity';
 import { Role, RoleSchema } from 'src/schemas/role.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
-
+import { Message,MessageSchema } from 'src/schemas/message.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -21,6 +21,7 @@ import { User, UserSchema } from 'src/schemas/user.entity';
       { name: Project.name, schema: ProjectSchema },
       { name: Role.name, schema: RoleSchema },
       { name: User.name, schema: UserSchema },
+      { name: Message.name, schema: MessageSchema },
     ]),
   ],
   providers: [WorkersService],

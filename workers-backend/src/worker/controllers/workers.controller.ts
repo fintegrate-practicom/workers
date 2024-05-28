@@ -5,7 +5,6 @@ import {
   UseInterceptors,
   Query,
   Body,
-  Post,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
