@@ -1,0 +1,40 @@
+import React from 'react';
+import { useAppSelector } from '../../redux/hooks';
+import GenericList from '../generic/genericList';
+import { EmployeeRole } from '../../classes/enum/employeeRole.enum';
+import taskSlice from '../../redux/taskSlice';
+import Task from '../../classes/task';
+import employee from '../../classes/employee';
+import { ObjectId, Types } from 'mongoose';
+
+const TasksShowList = () => {
+  const tasks: Task[] = useAppSelector(state => state.taskSlice);
+  const newEmployee: employee = {
+    userId: new Types.ObjectId('664cba7ee786ab5c121aa40b'),
+    businessId: '2',
+    code: 'EMP123',
+    createdBy: 'adminUserId',
+    updatedBy: 'adminUserId',
+    role: EmployeeRole.cleaner,
+  };
+  let filteredTasks = tasks;
+  if (newEmployee.role !== EmployeeRole.maneger) {
+    console.log('Filtering tasks for userId:'+ newEmployee.userId);
+    filteredTasks = tasks.filter(task => {
+        return task.employee.filter(emp => {
+        return emp===newEmployee.userId;
+      });
+    });
+    
+  }
+  return (
+    <>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <GenericList title={"tasks list"} list={filteredTasks} column={["taskName", "targetDate", "theUrgencyOfTheTask"]} desing={null} />
+      </div>
+    </>
+  );
+};
+export default TasksShowList;
+
+

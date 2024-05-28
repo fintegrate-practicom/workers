@@ -4,6 +4,7 @@ import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
 import { StatusEnum } from 'src/schemas/task.entity';
+import { Types } from 'mongoose';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -16,6 +17,7 @@ describe('TasksController', () => {
           provide: TasksService,
           useValue: {
             createTask: jest.fn(),
+            getAllTasks: jest.fn().mockResolvedValue(dynamicArry),
           },
         },
       ],
@@ -28,10 +30,10 @@ describe('TasksController', () => {
       businessId: 'Test Company',
       taskName: 'Test Task',
       completionDate: new Date(0),
-      description: 'efrat',
+      description: 'description',
       managerId: 'Test managerId',
       targetDate: new Date(0),
-      employee: 'efrat',
+      employee: new Types.ObjectId['123'](),
       status: StatusEnum.Completed,
       urgency: 2,
     };
@@ -54,6 +56,47 @@ describe('TasksController', () => {
       await expect(controller.createTask(taskData)).rejects.toThrow(
         BadRequestException,
       );
+    });
+  });
+  const managerId = '123';
+  const dynamicArry = [
+    {
+      businessId: 'Test Company',
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: ['123', '234'],
+      status: StatusEnum.Completed,
+      urgency: 2,
+    },
+    {
+      businessId: 'Test Company',
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: ['123', '234'],
+      status: StatusEnum.Completed,
+      urgency: 2,
+    },
+  ];
+  describe('getAllTasks', () => {
+    let result;
+
+    beforeEach(async () => {
+      jest.spyOn(service, 'getAllTasks');
+      result = await controller.getAllTasks(managerId);
+    });
+
+    it('should call service.getAllTasks with managerId', () => {
+      expect(service.getAllTasks).toBeCalledWith(managerId);
+    });
+
+    it('result should be equal to dynamicArry', () => {
+      expect(result).toEqual(dynamicArry);
     });
   });
 });

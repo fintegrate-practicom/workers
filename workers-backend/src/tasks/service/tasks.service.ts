@@ -10,13 +10,16 @@ export class TasksService {
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
   ) {}
 
+  async getAllManagerTasks(
+    businessId: string,
+    managerId: string,
+  ): Promise<Task[]> {
+    return await this.taskModel.find({ businessId } && { managerId }).exec();
+  }
+
   async createTask(task: CreateTaskDto): Promise<Task> {
     const taskToSave = {
       ...task,
-      targetDate: task.targetDate.toJSON(),
-      completionDate: task.completionDate
-        ? task.completionDate.toJSON()
-        : undefined,
     };
 
     const newTask = new this.taskModel(taskToSave);
