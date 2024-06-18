@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
-import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { RoleEnum, workerValidationsSchema } from '../validations/worker.validations.schema';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
@@ -14,17 +14,34 @@ export class WorkersService {
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
-      const newEmployee = new this.employeeModel(worker);
+      const roleValue = RoleEnum[worker.role as unknown as keyof typeof RoleEnum];
+
+      if (roleValue === undefined) {
+        throw new HttpException(`Invalid role: ${worker.role}`, HttpStatus.BAD_REQUEST);
+      }
+      const newEmployee = new this.employeeModel({
+        ...worker,
+        role: roleValue,
+      });
       const workerCode = this.generateUniqueNumber();
-      newEmployee.workerCode = workerCode;
+      newEmployee.code = workerCode;
       return await newEmployee.save();
     } catch (error) {
-      throw new HttpException(
-        'Error creating employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error.name === 'ValidationError') {
+        throw new HttpException(
+          { message: 'Validation error', error: error.errors },
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        this.logger.error('Error creating employee:', error);
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
     }
   }
+  
   async findAll(businessId: string): Promise<Employee[]> {
     const query = { businessId };
     const employees = await this.employeeModel.find(query).exec();

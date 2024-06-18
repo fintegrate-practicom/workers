@@ -18,11 +18,11 @@ export const { } = employeeSlice.actions;
 export const selectEmployees = (state: RootState) => state.employeeSlice.employees
 export default employeeSlice.reducer;
 
-export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
+export const createEmployee = createAsyncThunk('', async (_employee: employee) => {
     try {
         const response = await axios.post(http+'/workers', _employee)
         return response.data
-    } catch (error) {
+    }  catch (error) {
         return error
     }
 });
