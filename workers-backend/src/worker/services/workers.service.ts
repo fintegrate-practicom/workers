@@ -4,19 +4,37 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
+import { Router } from 'express';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-  ) {}
+    private readonly rabbitPublisherService: RabbitPublisherService,
+  ) { }
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
+    const message = {
+      pattern: 'message_exchange',
+      data: {
+        to: "efrat1574@gmail.com ",
+        subject: "new Employee",
+        type: 'email',
+        kindSubject: 'new Employee',
+        name: worker.createdBy,
+        jobTitle: worker.roleId,
+        invitationLink: "http://localhost:5173/",
+      },
+    };
     try {
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
       newEmployee.workerCode = workerCode;
+
+      await this.rabbitPublisherService.publishMessageToCommunication(message)
+
       return await newEmployee.save();
     } catch (error) {
       throw new HttpException(
@@ -126,7 +144,7 @@ export class WorkersService {
       if (!updatedEmployee) {
         throw new Error('Employee not found');
       }
-      
+
       this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {

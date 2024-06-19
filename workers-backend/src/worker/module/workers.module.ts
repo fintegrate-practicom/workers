@@ -11,6 +11,7 @@ import {
 import { Project, ProjectSchema } from 'src/schemas/project.entity';
 import { Role, RoleSchema } from 'src/schemas/role.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
+import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { User, UserSchema } from 'src/schemas/user.entity';
       { name: User.name, schema: UserSchema },
     ]),
   ],
-  providers: [WorkersService],
+  providers: [WorkersService,RabbitPublisherService],
   controllers: [WorkersController],
 })
 export class WorkersModule {}
