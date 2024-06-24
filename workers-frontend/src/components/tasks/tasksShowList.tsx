@@ -9,6 +9,7 @@ import { Types } from "mongoose";
 
 const TasksShowList = () => {
   const tasks: Task[] = useAppSelector((state) => state.taskSlice);
+console.log(tasks);
 
   const newEmployee: employee = {
     _id: new Types.ObjectId("664cba7ee786ab5c121aa40b"),

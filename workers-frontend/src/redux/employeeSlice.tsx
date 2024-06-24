@@ -5,6 +5,8 @@ import employee from "../classes/employee";
 
 const http = import.meta.env.VITE_HTTP;
 const businessId = import.meta.env.VITE_BUSINESSID;
+// const http = 'http://localhost:3001/api';
+// const businessId ='1';
 const res = await axios.get(http+`/workers?businessId=${businessId}`);
 const { data = {} } = res.data;
 
