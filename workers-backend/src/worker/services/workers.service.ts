@@ -23,17 +23,20 @@ export class WorkersService {
         subject: "new Employee",
         type: 'email',
         kindSubject: 'new Employee',
-        name: worker.createdBy,
-        jobTitle: worker.roleId,
+        name: worker.nameEmployee,
+        jobTitle: worker.role.type,
         invitationLink: "http://localhost:5173/",
       },
     };
     try {
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
-      newEmployee.workerCode = workerCode;
+
+      newEmployee.code = workerCode;
 
       await this.rabbitPublisherService.publishMessageToCommunication(message)
+
+
 
       return await newEmployee.save();
     } catch (error) {
