@@ -23,6 +23,7 @@ export class UsersController {
   constructor(private readonly _userService: UserService) { }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   getWorker(@Param('id') auth0_user_id: string) {
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
@@ -43,9 +44,10 @@ export class UsersController {
    
   
 
-  @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
-      return this._userService.updateUser(id, user);
+  @Put()
+  @UseGuards(AuthGuard('jwt'))
+  async updateUser(@Request() req, @Body() user: UpdateUserDto) {
+    const auth0_user_id = req.user.id;
+      return this._userService.updateUser(auth0_user_id, user);
   }
 }
-
